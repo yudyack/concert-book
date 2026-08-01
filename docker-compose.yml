@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: concert-book-db
+    environment:
+      POSTGRES_DB: concert_book
+      POSTGRES_USER: concert
+      POSTGRES_PASSWORD: concert
+    ports:
+      - "5432:5432"
