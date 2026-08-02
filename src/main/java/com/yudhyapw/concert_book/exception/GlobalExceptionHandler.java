@@ -15,6 +15,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException e) {
+        // 404
         return status(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
@@ -24,12 +25,26 @@ public class GlobalExceptionHandler {
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             problems.add(error.getField() + " " + error.getDefaultMessage());
         }
+        // 400
         return status(HttpStatus.BAD_REQUEST, String.join("; ", problems));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadArgument(IllegalArgumentException e) {
+        // 400
         return status(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(TokenOwnershipException.class)
+    public ResponseEntity<ErrorResponse> handleOwnership(TokenOwnershipException e) {
+        // 403
+        return status(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
+    @ExceptionHandler(BookingConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflict(BookingConflictException e) {
+        // 409
+        return status(HttpStatus.CONFLICT, e.getMessage());
     }
 
     private ResponseEntity<ErrorResponse> status(HttpStatus status, String message) {
