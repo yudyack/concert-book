@@ -10,27 +10,14 @@ import com.yudhyapw.concert_book.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.client.RestTestClient;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
-@AutoConfigureRestTestClient
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BookingApiTest {
-
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:17-alpine");
+class BookingApiTest extends IntegrationTest {
 
     @Autowired
     private RestTestClient client;
@@ -50,7 +37,7 @@ class BookingApiTest {
 
     @BeforeEach
     void seed() {
-        bookingRepository.deleteAll();   // FK order: bookings → tokens → parents
+        bookingRepository.deleteAll();
         tokenRepository.deleteAll();
         eventRepository.deleteAll();
         userRepository.deleteAll();

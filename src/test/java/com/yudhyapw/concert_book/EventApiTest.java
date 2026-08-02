@@ -1,28 +1,19 @@
 package com.yudhyapw.concert_book;
 
 import com.yudhyapw.concert_book.entity.Event;
+import com.yudhyapw.concert_book.repository.BookingRepository;
+import com.yudhyapw.concert_book.repository.BookingTokenRepository;
 import com.yudhyapw.concert_book.repository.EventRepository;
+import com.yudhyapw.concert_book.repository.UserRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.client.RestTestClient;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.time.OffsetDateTime;
 
-@Testcontainers
-@AutoConfigureRestTestClient
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class EventApiTest {
-
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:17-alpine");
+class EventApiTest extends IntegrationTest {
 
     @Autowired
     private RestTestClient client;
@@ -30,8 +21,22 @@ class EventApiTest {
     @Autowired
     private EventRepository eventRepository;
 
+    @Autowired
+    private BookingTokenRepository tokenRepository;
+    
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void seedEvents() {
+        bookingRepository.deleteAll();
+        tokenRepository.deleteAll();
+        eventRepository.deleteAll();
+        userRepository.deleteAll();
+
         eventRepository.deleteAll();
         OffsetDateTime now = OffsetDateTime.now();
         eventRepository.save(new Event("Rock Festival", "Jakarta", now.plusDays(30),
