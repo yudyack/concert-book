@@ -10,5 +10,6 @@ public record CreateEventRequest(@NotBlank String name,
                                  OffsetDateTime eventTime,
                                  @NotNull OffsetDateTime saleStart,
                                  @NotNull OffsetDateTime saleEnd,
-                                 @NotNull @Min(1) Integer ticketTotal) {
+                                 @NotNull @Min(1) Integer ticketTotal,
+                                 @NotNull @Min(1) Integer rateLimitPerSecond) {
 }

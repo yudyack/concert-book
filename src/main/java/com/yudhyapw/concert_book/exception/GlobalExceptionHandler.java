@@ -47,6 +47,12 @@ public class GlobalExceptionHandler {
         return status(HttpStatus.CONFLICT, e.getMessage());
     }
 
+    @ExceptionHandler(BookingTokenRateLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleConflict(BookingTokenRateLimitExceededException e) {
+        // 429
+        return status(HttpStatus.TOO_MANY_REQUESTS, e.getMessage());
+    }
+
     private ResponseEntity<ErrorResponse> status(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(ErrorResponse.of(status.value(), message));
     }

@@ -45,11 +45,11 @@ class BookingApiTest extends IntegrationTest {
         userId = userRepository.save(new User("Booker")).getId();
         OffsetDateTime now = OffsetDateTime.now();
         onSaleEventId = eventRepository.save(new Event("On Sale Fest", "Jakarta",
-                now.plusDays(30), now.minusHours(1), now.plusHours(1), 100)).getId();
+                now.plusDays(30), now.minusHours(1), now.plusHours(1), 100, 100)).getId();
         closedEventId = eventRepository.save(new Event("Future Fest", "Jakarta",
-                now.plusDays(30), now.plusDays(1), now.plusDays(2), 100)).getId();
+                now.plusDays(30), now.plusDays(1), now.plusDays(2), 100, 100)).getId();
         tinyEventId = eventRepository.save(new Event("Tiny Fest", "Jakarta",
-                now.plusDays(30), now.minusHours(1), now.plusHours(1), 3)).getId();
+                now.plusDays(30), now.minusHours(1), now.plusHours(1), 3, 100)).getId();
     }
 
     private UUID issueToken(Long forEventId) {

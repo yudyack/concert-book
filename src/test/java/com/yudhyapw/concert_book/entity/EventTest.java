@@ -12,7 +12,7 @@ class EventTest {
     private final OffsetDateTime saleEnd = OffsetDateTime.parse("2026-08-10T10:20:00+07:00");
 
     private Event event() {
-        return new Event("Concert", "Jakarta", saleEnd.plusDays(30), saleStart, saleEnd, 10_000);
+        return new Event("Concert", "Jakarta", saleEnd.plusDays(30), saleStart, saleEnd, 10_000, 100);
     }
 
     @Test

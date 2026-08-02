@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS
         ticket_available INT NOT NULL,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now (),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT now (),
+        event_rate_persecond INT NOT NULL DEFAULT 100,
         CONSTRAINT chk_available_non_negative CHECK (ticket_available >= 0),
         CONSTRAINT chk_available_within_total CHECK (ticket_available <= ticket_total)
     );

@@ -40,9 +40,9 @@ class EventApiTest extends IntegrationTest {
         eventRepository.deleteAll();
         OffsetDateTime now = OffsetDateTime.now();
         eventRepository.save(new Event("Rock Festival", "Jakarta", now.plusDays(30),
-                now.minusHours(1), now.plusHours(1), 100));
+                now.minusHours(1), now.plusHours(1), 100, 100));
         eventRepository.save(new Event("Jazz Night", "Bandung", now.plusDays(45),
-                now.plusDays(1), now.plusDays(2), 50));
+                now.plusDays(1), now.plusDays(2), 50, 100));
     }
 
     @Test

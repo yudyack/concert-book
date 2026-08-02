@@ -47,9 +47,10 @@ class BookingConcurrencyTest extends IntegrationTest {
 
         int tickets = 5_000;
         int competitors = 10_000;
+        int rateLimitPerSecond = 10_000;
         OffsetDateTime now = OffsetDateTime.now();
         long eventId = eventRepository.save(new Event("Ticket War", "Jakarta",
-                now.plusDays(30), now.minusMinutes(10), now.plusMinutes(10), tickets)).getId();
+                now.plusDays(30), now.minusMinutes(10), now.plusMinutes(10), tickets, rateLimitPerSecond)).getId();
 
         List<UUID> tokens = new ArrayList<>();
         for (int i = 0; i < competitors; i++) {
@@ -109,7 +110,7 @@ class BookingConcurrencyTest extends IntegrationTest {
         int tickets = 10;
         OffsetDateTime now = OffsetDateTime.now();
         long eventId = eventRepository.save(new Event("Ticket War", "Jakarta",
-                now.plusDays(30), now.minusMinutes(10), now.plusMinutes(10), tickets)).getId();
+                now.plusDays(30), now.minusMinutes(10), now.plusMinutes(10), tickets, 100)).getId();
 
 
         Long userId = userRepository.save(new User("double-clicker")).getId();

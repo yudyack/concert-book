@@ -33,6 +33,9 @@ public class Event {
     @Column(name = "ticket_available", nullable = false)
     private int ticketAvailable;
 
+    @Column(name = "event_rate_persecond", nullable = false)
+    private int rateLimitPerSecond;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
@@ -43,7 +46,8 @@ public class Event {
     }
 
     public Event(String name, String venue, OffsetDateTime eventTime,
-                 OffsetDateTime saleStart, OffsetDateTime saleEnd, int ticketTotal) {
+            OffsetDateTime saleStart, OffsetDateTime saleEnd, int ticketTotal,
+            int rateLimitPerSecond) {
         this.name = name;
         this.venue = venue;
         this.eventTime = eventTime;
@@ -51,6 +55,7 @@ public class Event {
         this.saleEnd = saleEnd;
         this.ticketTotal = ticketTotal;
         this.ticketAvailable = ticketTotal;
+        this.rateLimitPerSecond = rateLimitPerSecond;
     }
 
     public boolean isOnSaleAt(OffsetDateTime moment) {
@@ -100,6 +105,10 @@ public class Event {
         return ticketAvailable;
     }
 
+    public int getRateLimitPerSecond() {
+        return rateLimitPerSecond;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -126,6 +135,10 @@ public class Event {
 
     public void setTicketAvailable(int ticketAvailable) {
         this.ticketAvailable = ticketAvailable;
+    }
+
+    public void setRateLimitPerSecond(int rateLimitPerSecond) {
+        this.rateLimitPerSecond = rateLimitPerSecond;
     }
 
 }

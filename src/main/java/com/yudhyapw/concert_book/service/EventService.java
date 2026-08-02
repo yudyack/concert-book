@@ -40,7 +40,7 @@ public class EventService {
             throw new IllegalArgumentException("saleEnd must be after saleStart");
         }
         Event event = new Event(request.name(), request.venue(), request.eventTime(),
-                request.saleStart(), request.saleEnd(), request.ticketTotal());
+                request.saleStart(), request.saleEnd(), request.ticketTotal(), request.rateLimitPerSecond());
         return EventResponse.from(eventRepository.save(event));
     }
 }

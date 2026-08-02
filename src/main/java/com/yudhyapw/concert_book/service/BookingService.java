@@ -21,13 +21,16 @@ public class BookingService {
     private final EventRepository eventRepository;
     private final BookingTokenRepository tokenRepository;
     private final BookingRepository bookingRepository;
+    private final BookingTokenRateLimiter bookingTokenRateLimiter;
 
     public BookingService(UserRepository userRepository, EventRepository eventRepository,
-            BookingTokenRepository tokenRepository, BookingRepository bookingRepository) {
+            BookingTokenRepository tokenRepository, BookingRepository bookingRepository,
+            BookingTokenRateLimiter bookingTokenRateLimiter) {
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
         this.tokenRepository = tokenRepository;
         this.bookingRepository = bookingRepository;
+        this.bookingTokenRateLimiter = bookingTokenRateLimiter;
     }
 
     @Transactional
@@ -36,12 +39,18 @@ public class BookingService {
                 .orElseThrow(() -> new ResourceNotFoundException("user " + request.userId() + " not found"));
         Event event = eventRepository.findById(request.eventId())
                 .orElseThrow(() -> new ResourceNotFoundException("event " + request.eventId() + " not found"));
+        
+        // rate limit
+        if (!bookingTokenRateLimiter.tryAcquire(event.getId(), event.getRateLimitPerSecond())) {
+            throw new BookingTokenRateLimitExceededException("too many token requests for this event, retry shortly");
+        }
+
         BookingToken token = tokenRepository.save(new BookingToken(user, event));
         return BookingTokenResponse.from(token);
     }
 
     /**
-     * Submits a booking for a previously issued token. 
+     * Submits a booking for a previously issued token.
      */
     @Transactional
     public SubmitResult submitBooking(BookingRequest request) {
@@ -49,7 +58,7 @@ public class BookingService {
 
         BookingToken token = tokenRepository.findById(request.tokenId())
                 .orElseThrow(() -> new ResourceNotFoundException("token " + request.tokenId() + " not found"));
-                
+
         if (!token.getUser().getId().equals(request.userId())) {
             throw new TokenOwnershipException("token does not belong to user " + request.userId());
         }
