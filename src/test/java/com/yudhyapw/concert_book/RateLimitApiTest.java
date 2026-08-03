@@ -1,7 +1,6 @@
 package com.yudhyapw.concert_book;
 
 import com.yudhyapw.concert_book.dto.BookingTokenRequest;
-import com.yudhyapw.concert_book.dto.BookingTokenResponse;
 import com.yudhyapw.concert_book.entity.Event;
 import com.yudhyapw.concert_book.entity.User;
 import com.yudhyapw.concert_book.repository.*;
