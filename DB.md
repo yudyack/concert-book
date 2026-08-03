@@ -2,13 +2,13 @@ Terdapat empat tabel untuk project ini. Semua tabel menggunakan created_at untuk
 
 ### ms_user
 
-Tabel user dibuat sesederhana mungkin untuk melakukan semacam login hanya menggunakan user_name. 
+Tabel user dibuat sesederhana mungkin untuk melakukan register hanya menggunakan user_name. 
 
-| Column     | Type        | Constraints             | Description                |
-|------------|-------------|-------------------------|----------------------------|
-| user_id    | BIGINT      | PK, generated identity  |                            |
-| user_name  | TEXT        | NOT NULL, UNIQUE        | Readable human indentifier |
-| created_at | TIMESTAMPTZ | NOT NULL, default now() |                            |
+| Column     | Type        | Constraints             | Description               |
+|------------|-------------|-------------------------|---------------------------|
+| user_id    | BIGINT      | PK, generated identity  |                           |
+| user_name  | TEXT        | NOT NULL, UNIQUE        | Readable human identifier |
+| created_at | TIMESTAMPTZ | NOT NULL, default now() |                           |
 
 
 
@@ -48,14 +48,14 @@ Tabel untuk menyimpan booking token. Terhubung dengan user_id dan event_id. Seti
 
 Tabel untuk menyimpan booking yang sudah dilakukan user. Hanya disimpan jika transaksi dan validasi berhasil.
 
-| Column     | Type        | Constraints                              | Description                                               |
-|------------|-------------|------------------------------------------|-----------------------------------------------------------|
-| booking_id | BIGINT      | PK, generated identity                   |                                                           |
-| token_id   | UUID        | NOT NULL, UNIQUE, FK -> tr_booking_token | karena UNIQUE setiap boking_id memiliki 1 atau 0 token_id |
-| user_id    | BIGINT      | NOT NULL, FK -> ms_user                  |                                                           |
-| event_id   | BIGINT      | NOT NULL, FK -> ms_event                 |                                                           |
-| quantity   | INT         | NOT NULL, CHECK >= 1                     | jumlah berapa tiket yang dipesan oleh user                |
-| created_at | TIMESTAMPTZ | NOT NULL, default now()                  |                                                           |
+| Column     | Type        | Constraints                              | Description                                                |
+|------------|-------------|------------------------------------------|------------------------------------------------------------|
+| booking_id | BIGINT      | PK, generated identity                   |                                                            |
+| token_id   | UUID        | NOT NULL, UNIQUE, FK -> tr_booking_token | karena UNIQUE setiap token_id memiliki 1 atau 0 booking_id |
+| user_id    | BIGINT      | NOT NULL, FK -> ms_user                  |                                                            |
+| event_id   | BIGINT      | NOT NULL, FK -> ms_event                 |                                                            |
+| quantity   | INT         | NOT NULL, CHECK >= 1                     | jumlah berapa tiket yang dipesan oleh user                 |
+| created_at | TIMESTAMPTZ | NOT NULL, default now()                  |                                                            |
 
 
 

@@ -17,14 +17,14 @@ WHERE event_id = :id AND ticket_available >= :qty
 ```
 ```sql
 UPDATE BookingToken t
-            SET t.status = "USED", t.updatedAt = :now
+            SET t.status = 'USED', t.updatedAt = :now
             WHERE t.id = :tokenId
               AND t.user.id = :userId
-              AND t.status = "ISSUED"
+              AND t.status = 'ISSUED'
 ```
-3. Untuk multiple book, idempotent using token. Claim dengan token yang sama akan menghasilkan response yang sama.
-4. Transaction untuk pengurangan tiket, sehingga jika tiket habis maka rollback issued token.  
-5. Rate limiter solution, menggunakan bucket4j intervally refill pada issue booking token.
+2. Untuk multiple book, idempotent using token. Submit dengan token yang sama akan di-response booking yang asli (replay).
+3. Transaction untuk pengurangan tiket, sehingga jika tiket habis maka rollback issued token.  
+4. Rate limiter solution, menggunakan bucket4j intervally refill pada issue booking token.
 
 
 ## Sequence Diagram
