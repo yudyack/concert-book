@@ -70,7 +70,9 @@ public class BookingService {
         if (!event.isOnSaleAt(now)) {
             throw new BookingConflictException("event is not on sale at this time");
         }
-        // Atomic claim
+
+        // Every validation in claim (exist, issued, correct user) already done in previous code for give clearer condition
+        // Conditional update sql to make atomic claim -> prevent double booking 
         if (tokenRepository.claim(request.tokenId(), request.userId(), now) == 0) {
             return new SubmitResult(replay(request.tokenId()), false);
         }

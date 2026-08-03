@@ -1,5 +1,5 @@
 INSERT INTO ms_user (user_name)
-SELECT 'Alice'
+SELECT 'Nita'
 WHERE NOT EXISTS (SELECT 1 FROM ms_user);
 
 INSERT INTO ms_user (user_name)

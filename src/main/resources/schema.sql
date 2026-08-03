@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS
     ms_user (
         user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        user_name TEXT NOT NULL,
+        user_name TEXT NOT NULL UNIQUE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now ()
     );
 

@@ -3,6 +3,7 @@ package com.yudhyapw.concert_book.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -51,6 +52,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleConflict(BookingTokenRateLimitExceededException e) {
         // 429
         return status(HttpStatus.TOO_MANY_REQUESTS, e.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException e) {
+        return status(HttpStatus.CONFLICT, "conflicts with existing data");
     }
 
     private ResponseEntity<ErrorResponse> status(HttpStatus status, String message) {

@@ -13,7 +13,7 @@ public interface BookingTokenRepository extends JpaRepository<BookingToken, UUID
 
     /**
      * Claims the token by flipping ISSUED to USED, but only when it is still ISSUED and belongs to the given user. 
-     * Returns 1 when this request succeed and 0 when the token was already used, unknown, or not the user's making duplicate booking submissions a no-op.
+     * Returns 1 when this request succeed and 0 if there was nothing to claim (already used, wrong owner, or unknown token)
      */
     @Modifying
     @Query("""

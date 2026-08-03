@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>concert-book</title>
+<style>
+  body { font-family: monospace; max-width: 720px; margin: 2rem auto; }
+  fieldset { margin-bottom: 1rem; }
+  pre { background: #f4f4f4; padding: .5rem; white-space: pre-wrap; }
+  button { font-family: monospace; }
+</style>
+</head>
+<body>
+<h1>concert-book</h1>
+
+<fieldset>
+  <legend>login (by user id)</legend>
+  <input id="userId" type="number" placeholder="user id">
+  <button onclick="login()">login</button>
+  <input id="newName" placeholder="or new user name">
+  <button onclick="register()">register</button>
+  <span id="who"></span>
+</fieldset>
+
+<fieldset>
+  <legend>events</legend>
+  <input id="q" placeholder="search name">
+  <button onclick="loadEvents()">search</button>
+  <div id="events"></div>
+</fieldset>
+
+<fieldset>
+  <legend>my bookings</legend>
+  <button onclick="loadBookings()">refresh</button>
+  <div id="bookings"></div>
+</fieldset>
+
+<fieldset>
+  <legend>last response</legend>
+  <pre id="out">-</pre>
+</fieldset>
+
+<script>
+let me = null;
+
+async function call(method, url, body) {
+  const res = await fetch(url, {
+    method,
+    headers: body ? { "Content-Type": "application/json" } : {},
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json().catch(() => ({}));
+  document.getElementById("out").textContent =
+      method + " " + url + " -> " + res.status + "\n" + JSON.stringify(data, null, 2);
+  if (!res.ok) throw data;
+  return data;
+}
+
+async function register() {
+  const user = await call("POST", "/api/users", { name: document.getElementById("newName").value });
+  document.getElementById("userId").value = user.userId;
+  await login();
+}
+
+async function login() {
+  me = await call("GET", "/api/users/" + document.getElementById("userId").value);
+  document.getElementById("who").textContent = " logged in as: " + me.name + " (#" + me.userId + ")";
+  loadEvents(); loadBookings();
+}
+
+async function loadEvents() {
+  const q = document.getElementById("q").value;
+  const events = await call("GET", "/api/events" + (q ? "?name=" + encodeURIComponent(q) : ""));
+  document.getElementById("events").innerHTML = events.map(e =>
+      "<p>#" + e.eventId + " <b>" + e.name + "</b> @ " + (e.venue || "?") +
+      " | tickets: " + e.ticketAvailable + "/" + e.ticketTotal +
+      " | sale: " + e.saleStart + " .. " + e.saleEnd +
+      ' | qty <input size="2" id="qty' + e.eventId + '" value="1">' +
+      ' <button onclick="book(' + e.eventId + ')">book</button></p>'
+  ).join("");
+}
+
+async function book(eventId) {
+  if (!me) { alert("login first"); return; }
+  const qty = parseInt(document.getElementById("qty" + eventId).value);
+  const token = await call("POST", "/api/booking-tokens", { userId: me.userId, eventId });
+  await call("POST", "/api/bookings", { tokenId: token.tokenId, userId: me.userId, quantity: qty });
+  loadEvents(); loadBookings();
+}
+
+async function loadBookings() {
+  if (!me) return;
+  const list = await call("GET", "/api/bookings?userId=" + me.userId);
+  document.getElementById("bookings").innerHTML = list.length
+      ? list.map(b => "<p>booking #" + b.bookingId + " | event " + b.eventId +
+                      " | qty " + b.quantity + " | " + b.createdAt + "</p>").join("")
+      : "<p>none</p>";
+}
+</script>
+</body>
+</html>
