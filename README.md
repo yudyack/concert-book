@@ -52,7 +52,7 @@ Semua test ada di src/test
 
 ```
 ./mvnw test
-./mvnw.cmd test
+(windows) ./mvnw.cmd test
 ```
 
 ## Running Application
@@ -65,7 +65,7 @@ docker compose up -d
 2. Start Application
 ```
 ./mvnw spring-boot:run        
-.\mvnw.cmd spring-boot:run
+(windows).\mvnw.cmd spring-boot:run
 ```
 
 ## Documentation
